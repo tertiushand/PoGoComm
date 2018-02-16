@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { MapService } from '../../shared/services/map/map.service';
+//import * as mapboxgl from '../../../node_modules/mapbox-gl/dist/mapbox-gl.js';
 
 @Component({
   selector: 'app-map',
@@ -8,6 +9,8 @@ import { MapService } from '../../shared/services/map/map.service';
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements OnInit {
+
+  private marker;
 
   constructor(
     private map: MapService
@@ -23,9 +26,12 @@ export class MapComponent implements OnInit {
       zoom: 15
     });
 
-    this.map.addImage('battle', '../../../assets/imgs/icons/pogo.png', mainMap);
-
-    this.map.addIcon([0,0], 0.25, 'battle', mainMap);
+    mainMap.on('click', function (e) {
+      if (this.marker)
+        this.marker.remove();
+      this.marker = new mapboxgl.Marker()
+        .setLngLat(e.lngLat)
+        .addTo(mainMap);
+    });
   }
-
 }
