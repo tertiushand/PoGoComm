@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 
-import { MapService } from '../../shared/services/map/map.service';
-//import * as mapboxgl from '../../../node_modules/mapbox-gl/dist/mapbox-gl.js';
-
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -13,7 +10,6 @@ export class MapComponent implements OnInit {
   private marker;
 
   constructor(
-    private map: MapService
   ) { }
 
   ngOnInit() {
