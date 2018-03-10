@@ -2,19 +2,25 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PagesRoutingModule } from './pages-routing.module';
-import { MapComponent } from './map/map.component';
-import { MapService } from '../shared/services/map/map.service';
+import { HeaderModule } from '../shared/layout/header/header.module';
+import { SidebarModule } from '../shared/layout/sidebar/sidebar.module';
+import { MapModule } from './map/map.module';
+
+import { PagesComponent } from './pages.component';
 
 @NgModule({
   imports: [
     CommonModule,
-    PagesRoutingModule
+    PagesRoutingModule,
+    HeaderModule,
+    MapModule,
+    SidebarModule
   ],
   declarations: [
-    MapComponent
+    PagesComponent
   ],
-  providers: [
-    MapService
+  exports: [
+    PagesComponent
   ]
 })
 export class PagesModule { }

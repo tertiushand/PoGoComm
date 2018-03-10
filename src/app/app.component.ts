@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 
+import { HeaderModule } from './shared/layout/header/header.module';
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',

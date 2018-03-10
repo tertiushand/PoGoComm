@@ -1,6 +1,16 @@
 <!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1> It is working </h1>
-</div>
+<script src="https://www.gstatic.com/firebasejs/4.10.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyCYk7Vsb3TksS4-3pPY-KImrd3v0ysEl0s",
+    authDomain: "pogo-comm.firebaseapp.com",
+    databaseURL: "https://pogo-comm.firebaseio.com",
+    projectId: "pogo-comm",
+    storageBucket: "",
+    messagingSenderId: "825570294140"
+  };
+  firebase.initializeApp(config);
+</script>
 
-<router-outlet></router-outlet>
+<app-pages></app-pages>
