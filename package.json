@@ -24,7 +24,11 @@
     "ajv": "^6.1.1",
     "bootstrap": "^4.0.0",
     "core-js": "^2.4.1",
+<<<<<<< HEAD
     "firebase": "^4.10.0",
+=======
+    "firebase": "^4.10.1",
+>>>>>>> abd0871e38b989ccce49d99fc59edafaddaec517
     "jquery": "^3.3.1",
     "mapbox-gl": "^0.44.1",
     "popper.js": "^1.12.9",
