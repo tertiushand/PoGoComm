@@ -3,8 +3,8 @@
 >
   <div class="hamburger">&nbsp;</div>
   <ul class="nav-menu">
-    <li><nav-arrow></nav-arrow>Nav 1</li>
-    <ul>
+    <li><nav-arrow (arrowState)="updateSubnav('showSubnav1', $event)"></nav-arrow>Nav 1</li>
+    <ul [@subnavState]="showSubnav1">
       <li>Sub 1</li>
       <li>Sub 2</li>
     </ul>

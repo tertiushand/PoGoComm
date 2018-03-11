@@ -22,15 +22,31 @@ import {
       })),
       transition('inactive => active', animate('500ms ease-in')),
       transition('active => inactive', animate('500ms ease-out'))
+    ]),
+    trigger('subnavState', [
+      state('inactive', style({
+        height: '0'
+      })),
+      state('active',   style({
+        height: '*'
+      })),
+      transition('inactive => active', animate('500ms ease-in')),
+      transition('active => inactive', animate('500ms ease-out'))
     ])
   ]
 })
 export class SidebarComponent implements OnInit {
   @Input() showNavbar;
+  private showSubnav1 = 'inactive';
+  private showSubnav2 = 'inactive';
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  updateSubnav(subnav: string, state: string) {
+    this[subnav] = state;
   }
 
 }
