@@ -13,3 +13,7 @@ header {
     z-index: 20;
     height: 3.5em;
 }
+
+#logo {
+    width: 11em;
+}
