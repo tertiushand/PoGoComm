@@ -1,4 +1,6 @@
 <app-header (menuState)="updateMenu($event)"></app-header>
 <app-sidebar [showNavbar]="menuState"></app-sidebar>
 
-<router-outlet></router-outlet>
+<div class="contain" [@navbarState]="menuState">
+    <router-outlet></router-outlet>
+</div>

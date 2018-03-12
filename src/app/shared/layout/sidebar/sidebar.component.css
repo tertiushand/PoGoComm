@@ -6,7 +6,7 @@ aside {
     height: 100%;
     width: 16em;
     background-color: rgba(238,238,238, 0.9);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 10;
@@ -42,4 +42,8 @@ aside {
     padding: 5px 10px 5px 40px;
     margin: 0;
     box-shadow: none;
+}
+
+nav-arrow {
+    float: right;
 }

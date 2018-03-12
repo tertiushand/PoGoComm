@@ -1,13 +1,16 @@
 header {
     background-color: rgba(0,0,0, 0.8);
     color: #FFF;
-    position: relative;
+    position: fixed;
+    top: 0;
+    left: 0;
     z-index: 5;
     height: 3.5em;
+    width: 100%;
 }
 
 .main {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 20;

@@ -3,15 +3,14 @@
 >
   <div class="hamburger">&nbsp;</div>
   <ul class="nav-menu">
-    <li><nav-arrow (arrowState)="updateSubnav('showSubnav1', $event)"></nav-arrow>Nav 1</li>
-    <ul [@subnavState]="showSubnav1">
-      <li>Sub 1</li>
-      <li>Sub 2</li>
-    </ul>
-    <li><nav-arrow></nav-arrow>Nav 2</li>
-    <ul>
-      <li>Sub 1</li>
-      <li>Sub 2</li>
-    </ul>
+    <div *ngFor="let nav of navInfo.config; index as i;">
+      <li (click)="handleNav(nav, i)">
+        {{nav.label}}
+        <nav-arrow *ngIf="nav.subnavState" [incomingState]="nav.subnavState"></nav-arrow>
+      </li>
+      <ul *ngIf="nav.subnav" [@subnavState]="nav.subnavState">
+        <li *ngFor="let subnav of nav.subnav" (click)="handleNav(subnav)">{{subnav.label}}</li>
+      </ul>
+    </div>
   </ul>
 </aside>

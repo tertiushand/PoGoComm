@@ -5,6 +5,7 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { HeaderModule } from '../shared/layout/header/header.module';
 import { SidebarModule } from '../shared/layout/sidebar/sidebar.module';
 import { MapModule } from './map/map.module';
+import { NormalModule } from './normal/normal.module';
 
 import { PagesComponent } from './pages.component';
 
@@ -14,6 +15,7 @@ import { PagesComponent } from './pages.component';
     PagesRoutingModule,
     HeaderModule,
     MapModule,
+    NormalModule,
     SidebarModule
   ],
   declarations: [

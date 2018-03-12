@@ -1,4 +1,4 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import {
   trigger,
   state,
@@ -26,18 +26,12 @@ import {
   ]
 })
 export class NavArrowComponent implements OnInit {
-
-  @Output() arrowState = new EventEmitter();
+  @Input() incomingState;
   private currentState = 'inactive';
 
   constructor() { }
 
   ngOnInit() {
-  }
-
-  toggleState() {
-    this.currentState = this.currentState === 'active'?'inactive':'active';
-    this.arrowState.emit(this.currentState);
   }
 
 }

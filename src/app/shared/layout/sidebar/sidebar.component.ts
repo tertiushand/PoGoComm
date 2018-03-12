@@ -1,12 +1,16 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import {
   trigger,
   state,
   style,
   animate,
-  transition, 
-  keyframes
+  transition
 } from '@angular/animations';
+
+import { SidebarConfig } from "./sidebar.config";
+import { States } from '../../variables/states';
+import { Nav, SubNav } from './sidebar.type';
 
 @Component({
   selector: 'app-sidebar',
@@ -37,16 +41,29 @@ import {
 })
 export class SidebarComponent implements OnInit {
   @Input() showNavbar;
-  private showSubnav1 = 'inactive';
-  private showSubnav2 = 'inactive';
 
-  constructor() { }
+  constructor(
+    private navInfo: SidebarConfig,
+    private router: Router,
+    private states: States
+  ) { }
 
   ngOnInit() {
+
   }
 
-  updateSubnav(subnav: string, state: string) {
-    this[subnav] = state;
+  updateSubnav(index: number, state?: string) {
+    this.navInfo.config[index].subnavState = state?state:this.navInfo.config[index].subnavState === this.states.active?this.states.inactive:this.states.active;
+  }
+
+  handleNav(nav: Nav, index?: number) {
+    if (nav.route) {
+      this.router.navigate(['/'+nav.route]);
+    } else if (nav.uri) {
+      window.open(nav.uri, "_blank");
+    } else if (nav.subnav) {
+      this.updateSubnav(index);
+    }
   }
 
 }
