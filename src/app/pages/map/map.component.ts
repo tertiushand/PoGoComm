@@ -28,7 +28,7 @@ export class MapComponent implements OnInit {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
 
-    const marker = L.marker([39.79973, -105.07814], {icon: this.icons.pokestopIcon}).addTo(this.map);
+    const marker = L.marker([39.79973, -105.07814], {icon: this.icons.pokestop}).addTo(this.map);
     marker.bindPopup('<b>Hello world!</b><br>I am a popup.');
 
     this.map.on('click', (e) => {
@@ -40,6 +40,6 @@ export class MapComponent implements OnInit {
     if (this.cursor) {
       this.cursor.removeFrom(this.map);
     }
-    this.cursor = L.marker([e.latlng.lat, e.latlng.lng], {icon: this.icons.pointerIcon}).addTo(this.map);
+    this.cursor = L.marker([e.latlng.lat, e.latlng.lng], {icon: this.icons.pointer}).addTo(this.map);
   }
 }
