@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import * as firebase from 'firebase';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { Observable } from 'rxjs';
 declare let L;
 
 import { MapIconsService } from '../../shared/layout/map-icons/map-icons.service';
@@ -13,12 +14,16 @@ import { MapIconsService } from '../../shared/layout/map-icons/map-icons.service
 export class MapComponent implements OnInit {
 
   private map;
+  private gyms: Observable<any[]>;
   private marker;
   private cursor;
 
   constructor(
-    private icons: MapIconsService
-  ) { }
+    private icons: MapIconsService,
+    private fs: AngularFirestore
+  ) {
+    this.gyms = fs.collection('gyms').valueChanges();
+  }
 
   ngOnInit() {
 
@@ -28,8 +33,7 @@ export class MapComponent implements OnInit {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(this.map);
 
-    const marker = L.marker([39.79973, -105.07814], {icon: this.icons.pokestop}).addTo(this.map);
-    marker.bindPopup('<b>Hello world!</b><br>I am a popup.');
+    this.createGyms();
 
     this.map.on('click', (e) => {
       this.onMapClick(e);
@@ -41,5 +45,15 @@ export class MapComponent implements OnInit {
       this.cursor.removeFrom(this.map);
     }
     this.cursor = L.marker([e.latlng.lat, e.latlng.lng], {icon: this.icons.pointer}).addTo(this.map);
+  }
+
+  createGyms() {
+    this.gyms.subscribe(gyms => {
+      gyms.forEach(gym => {
+        L.marker(gym.coords, {icon: this.icons.pokestop})
+          .addTo(this.map)
+          .bindPopup('Name: ' + gym.name);
+      });
+    });
   }
 }
