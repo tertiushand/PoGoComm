@@ -18,6 +18,13 @@ export class MapComponent implements OnInit {
   private marker;
   private cursor;
 
+
+  private topleft;
+  private topright;
+  private bottomleft;
+  private bottomright;
+
+
   constructor(
     private icons: MapIconsService,
     private fs: AngularFirestore
@@ -38,13 +45,49 @@ export class MapComponent implements OnInit {
     this.map.on('click', (e) => {
       this.onMapClick(e);
     });
+
+    this.map.on('zoomend', (e) => {
+      console.log(e);
+      if (this.topleft) {
+        this.topleft.removeFrom(this.map);
+        this.topright.removeFrom(this.map);
+        this.bottomleft.removeFrom(this.map);
+        this.bottomright.removeFrom(this.map);
+      }
+
+      let zoomRatio = 0.540672;
+      let zoom = e.target._zoom;
+
+      for (let i = 0; i < zoom; i++ ) {
+        zoomRatio = zoomRatio / 2;
+      }
+
+      let perLatPix = zoomRatio;
+      let perLngPix = perLatPix * 1.30303;//0.000086;
+      let x = e.target._size.x;
+      let y = e.target._size.y;
+      let latView = y * perLatPix;
+      let lngView = x * perLngPix;
+      let centerLat = e.target._animateToCenter.lat;
+      let centerLng = e.target._animateToCenter.lng;
+      let maxLat = centerLat + latView;
+      let minLat = centerLat - latView;
+      let maxLng = centerLng + lngView;
+      let minLng = centerLng - lngView;
+
+      this.topleft = L.marker([maxLat, maxLng], {icon: this.icons.pointer}).addTo(this.map);
+      this.topright = L.marker([maxLat, minLng], {icon: this.icons.pointer}).addTo(this.map);
+      this.bottomleft = L.marker([minLat, maxLng], {icon: this.icons.pointer}).addTo(this.map);
+      this.bottomright = L.marker([minLat, minLng], {icon: this.icons.pointer}).addTo(this.map);
+
+    });
   }
 
   onMapClick(e) {
     if (this.cursor) {
       this.cursor.removeFrom(this.map);
     }
-    this.cursor = L.marker([e.latlng.lat, e.latlng.lng], {icon: this.icons.pointer}).addTo(this.map);
+    this.cursor = L.marker([e.latlng.lat, e.latlng.lng], {icon: this.icons.pointer}).addTo(this.map).bindPopup('Loc: ' + e.latlng.lat + ', ' + e.latlng.lng);
   }
 
   createGyms() {
