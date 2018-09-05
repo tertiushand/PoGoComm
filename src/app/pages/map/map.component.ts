@@ -21,11 +21,9 @@ export class MapComponent implements OnInit {
 
   private map;
   private gyms: Array<Gym> = [];
-  private gymsLat: Observable<any[]>;
-  private gymsLng: Observable<any[]>;
-  private marker;
   private cursor;
-  private startCoords: Coords = {lat: 39.7909, lng: -105.0844}
+  private startCoords: Coords = {lat: 39.7909, lng: -105.0844};
+  private currentZoom = 13;
 
 
   private topleft;
@@ -48,7 +46,7 @@ export class MapComponent implements OnInit {
     this.map.on('load', (e) =>{
       this.updateMap(e);
     })
-      .setView([39.7909, -105.0844], 13);
+      .setView(this.startCoords, this.currentZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -72,12 +70,20 @@ export class MapComponent implements OnInit {
     if (this.cursor) {
       this.cursor.removeFrom(this.map);
     }
-    this.cursor = L.marker([e.latlng.lat, e.latlng.lng], {icon: this.icons.pointer}).addTo(this.map).bindPopup('Loc: ' + e.latlng.lat + ', ' + e.latlng.lng);
+
+    this.cursor = this.mapServ.createCursor(
+      {lat: e.latlng.lat, lng: e.latlng.lng},
+      this.map,
+      this.createPopup({lat: e.latlng.lat, lng: e.latlng.lng})
+    );
   }
 
   updateMap(e) {
+    if (e.target._animateToZoom)
+      this.currentZoom = e.target._animateToZoom;
+    
     let viewCoords: ViewMinMax = this.mapServ.findViewCoords({
-      zoomLevel: 13,
+      zoomLevel: this.currentZoom,
       screen: {x: e.target._size.x, y: e.target._size.y},
       center: this.map.getCenter()
     });
@@ -96,9 +102,14 @@ export class MapComponent implements OnInit {
 
   createGyms(newGyms: Array<Gym>) {
     newGyms.forEach(gym => {
-      L.marker(gym.coords, {icon: this.icons.pokestop})
-        .addTo(this.map)
-        .bindPopup('Name: ' + gym.name);
+      this.mapServ.createGym(gym, this.map);
     });
   }
+
+  createPopup(coords: Coords) {
+    return `
+      <div><button>Submit Gym</button></div>
+      <div><button>Submit Pokestop</button></div>
+    `;
+  };
 }
