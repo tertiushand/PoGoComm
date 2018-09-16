@@ -23,14 +23,12 @@ export class MapComponent implements OnInit {
   private gyms: Array<Gym> = [];
   private cursor;
   private startCoords: Coords = {lat: 39.7909, lng: -105.0844};
+  private cursorLocation: Coords = this.startCoords;
   private currentZoom = 13;
 
-
-  private topleft;
-  private topright;
-  private bottomleft;
-  private bottomright;
-
+  private popupContainer = L.DomUtil.create('div');
+  private pokestopBtn = this.mapServ.createButton('pokestop', this.popupContainer);
+  private gymBtn = this.mapServ.createButton('gym', this.popupContainer);
 
   constructor(
     private icons: MapIconsService,
@@ -40,12 +38,11 @@ export class MapComponent implements OnInit {
   }
 
   ngOnInit() {
-    
 
     this.map = L.map('mainMap');
-    this.map.on('load', (e) =>{
-      this.updateMap(e);
-    })
+    this.map.on('load', (e) =>
+      this.updateMap(e)
+    )
       .setView(this.startCoords, this.currentZoom);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -64,6 +61,17 @@ export class MapComponent implements OnInit {
     this.map.on('zoomend', (e) => {
       this.updateMap(e);
     });
+
+    L.DomEvent.on(this.pokestopBtn, 'click', () => {
+      alert('Pokestop at ' + JSON.stringify(this.cursorLocation));
+    });
+
+    L.DomEvent.on(this.gymBtn, 'click', () => {
+      this.mapServ.addGym({
+        coords: this.cursorLocation,
+        name: 'New Gym'
+      });
+    });
   }
 
   onMapClick(e) {
@@ -71,32 +79,37 @@ export class MapComponent implements OnInit {
       this.cursor.removeFrom(this.map);
     }
 
+    this.cursorLocation = {lat: e.latlng.lat, lng: e.latlng.lng};
     this.cursor = this.mapServ.createCursor(
       {lat: e.latlng.lat, lng: e.latlng.lng},
       this.map,
-      this.createPopup({lat: e.latlng.lat, lng: e.latlng.lng})
+      this.popupContainer
     );
   }
 
   updateMap(e) {
-    if (e.target._animateToZoom)
+    if (e.target._animateToZoom) {
       this.currentZoom = e.target._animateToZoom;
-    
-    let viewCoords: ViewMinMax = this.mapServ.findViewCoords({
+    }
+
+    const viewCoords: ViewMinMax = this.mapServ.findViewCoords({
       zoomLevel: this.currentZoom,
       screen: {x: e.target._size.x, y: e.target._size.y},
       center: this.map.getCenter()
     });
-    
 
-    this.fs.collection('gyms', gym => gym.where('coords.lat','<',viewCoords.latMax).where('coords.lat','>',viewCoords.latMin)).valueChanges().subscribe((gymsLat: Array<Gym>) => {
-      let newGyms = _.differenceWith(
-        _.filter(gymsLat, (gym: Gym) => {return gym.coords.lng > viewCoords.lngMin && gym.coords.lng < viewCoords.lngMax}),
-        this.gyms,
-        _.isEqual
-      );
-      this.createGyms(newGyms);
-      this.gyms = _.concat(this.gyms, newGyms);
+    this.fs.collection('gyms', gym => gym
+      .where('coords.lat', '<', viewCoords.latMax)
+      .where('coords.lat', '>', viewCoords.latMin))
+      .valueChanges()
+      .subscribe((gymsLat: Array<Gym>) => {
+        const newGyms = _.differenceWith(
+          _.filter(gymsLat, (gym: Gym) => gym.coords.lng > viewCoords.lngMin && gym.coords.lng < viewCoords.lngMax),
+          this.gyms,
+          _.isEqual
+        );
+        this.createGyms(newGyms);
+        this.gyms = _.concat(this.gyms, newGyms);
     });
   }
 
@@ -105,11 +118,4 @@ export class MapComponent implements OnInit {
       this.mapServ.createGym(gym, this.map);
     });
   }
-
-  createPopup(coords: Coords) {
-    return `
-      <div><button>Submit Gym</button></div>
-      <div><button>Submit Pokestop</button></div>
-    `;
-  };
 }

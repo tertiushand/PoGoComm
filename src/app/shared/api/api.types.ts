@@ -1,4 +1,4 @@
-import { Coords }  from '../services/map/map.service';
+import { Coords } from '../services/map/map.service';
 import { Time } from '@angular/common';
 
 export interface Gym {
