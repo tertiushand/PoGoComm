@@ -27,11 +27,11 @@ export class MapComponent implements OnInit {
   private currentZoom = 13;
 
   private popupContainer = L.DomUtil.create('div');
-  private pokestopBtn = this.mapServ.createButton('pokestop', this.popupContainer);
+  private gymName = this.mapServ.createInput('name', this.popupContainer);
   private gymBtn = this.mapServ.createButton('gym', this.popupContainer);
+  // private pokestopBtn = this.mapServ.createButton('pokestop', this.popupContainer);
 
   constructor(
-    private icons: MapIconsService,
     private fs: AngularFirestore,
     private mapServ: MapService
   ) {
@@ -62,15 +62,12 @@ export class MapComponent implements OnInit {
       this.updateMap(e);
     });
 
-    L.DomEvent.on(this.pokestopBtn, 'click', () => {
-      alert('Pokestop at ' + JSON.stringify(this.cursorLocation));
-    });
-
     L.DomEvent.on(this.gymBtn, 'click', () => {
       this.mapServ.addGym({
         coords: this.cursorLocation,
-        name: 'New Gym'
+        name: this.gymName.value
       });
+      this.gymName.value = '';
     });
   }
 

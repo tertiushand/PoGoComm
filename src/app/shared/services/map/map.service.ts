@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from 'angularfire2/firestore';
 import { AngularFireAuth } from 'angularfire2/auth';
-import { database } from 'firebase';
+import { firestore } from 'firebase';
 declare let L;
 
 import { MapIconsService } from '../../layout/map-icons/map-icons.service';
@@ -63,12 +63,18 @@ export class MapService {
         return btn;
     }
 
+    createInput(label: string, container: any) {
+        const input = L.DomUtil.create('input', 'name', container);
+        input.setAttribute('type', 'text');
+        return input;
+    }
+
     /***************************** Add Items to the database *******************************/
     addGym(newGym: GymSimple): Promise<any> {
         return this.fs.collection('gyms').add({
             coords: newGym.coords,
             creation: {
-                timeStamp: database.ServerValue.TIMESTAMP,
+                timeStamp: firestore.Timestamp.now(),
                 uid: this.auth.auth.currentUser.uid
             },
             exElig: newGym.exElig ? newGym.exElig : false,
